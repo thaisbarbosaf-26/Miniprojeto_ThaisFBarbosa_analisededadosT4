@@ -27,7 +27,7 @@ print('\n')
 datas_teste = pd.to_datetime(df['DATA'], format='%d/%m/%Y', errors='coerce')
 print('Datas inválidas:', datas_teste.isna().sum())
 
-# Alteração de valores inválidos em PR_CAT p/ 'SEM CATEGORIA'
+# Alteração de valores inválidos em PR_CAT e PR_NOME p/ "SEM CATEGORIA.p/ 'SEM CATEGORIA'
 def corrigir_categoria(categoria):
     if categoria == '#N/D':
         return 'SEM CATEGORIA'
@@ -36,8 +36,13 @@ def corrigir_categoria(categoria):
 
 print("\nQUANTIDADE DE PRODUTOS POR CATEGORIA:\n")
 df['PR_CAT'] = df['PR_CAT'].apply(corrigir_categoria)
+df['PR_NOME'] = df['PR_NOME'].apply(corrigir_categoria)
+
 
 print(df['PR_CAT'].value_counts(dropna=False))
+
+print("\nQUANTIDADE DE PRODUTOS POR NOME:\n")
+print(df['PR_NOME'].value_counts(dropna=False))
 
 
 print("\n\nESTATISTICA DA COLUNA CL_FHL (NÚMERO DE FILHOS)\n")
