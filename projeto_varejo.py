@@ -44,9 +44,24 @@ print(df['PR_CAT'].value_counts(dropna=False))
 print("\nQUANTIDADE DE PRODUTOS POR NOME:\n")
 print(df['PR_NOME'].value_counts(dropna=False))
 
-
+# Comandos para obter os resultados de estatistica da coluna CL_FLH (n° de filhos)
 print("\n\nESTATISTICA DA COLUNA CL_FHL (NÚMERO DE FILHOS)\n")
-filhos = df["CL_FHL"]
+
+filhos_por_cliente = df.groupby("CL_ID")["CL_FHL"].nunique()
+
+print("\nClientes com mais de um valor de CL_FHL:")
+print(filhos_por_cliente[filhos_por_cliente > 1])
+
+clientes = df[["CL_ID", "CL_FHL"]].drop_duplicates("CL_ID")
+
+print("\nQuantidade de clientes:", len(clientes))
+print(clientes.head())
+
+print("\nQUANTIDADE DE CLIENTES POR NÚMERO DE FILHOS:")
+print(clientes["CL_FHL"].value_counts().sort_index())
+
+filhos = pd.to_numeric(clientes["CL_FHL"], errors="coerce")
+
 estatisticas_filhos = pd.Series(
     {
         "contagem": filhos.count(),
@@ -55,13 +70,16 @@ estatisticas_filhos = pd.Series(
         "desvio padrão": filhos.std(),
         "moda": filhos.mode().iloc[0],
         "mínimo": filhos.min(),
-        "máximo": filhos.max(),
         "1º quartil": filhos.quantile(0.25),
         "2º quartil": filhos.quantile(0.50),
         "3º quartil": filhos.quantile(0.75),
+        "máximo": filhos.max(),
     }
 )
+
+print("\nESTATÍSTICAS DE NÚMERO DE FILHOS POR CLIENTE:")
 print(estatisticas_filhos.round(2))
+
 
 
 # Construindo gráfico p/ avaliar a quantidade de produtos por categoria
